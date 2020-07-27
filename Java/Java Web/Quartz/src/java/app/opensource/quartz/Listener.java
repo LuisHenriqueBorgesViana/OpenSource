@@ -15,6 +15,7 @@ import javax.servlet.ServletContextListener;
 
 public class Listener implements ServletContextListener {
 
+    // Define a váriavel do Agendador
     Scheduler scheduler = null;
 
     @Override
@@ -22,14 +23,16 @@ public class Listener implements ServletContextListener {
          
         try { 
 
+            // Mapeamento da Job (Rotina)
             JobDetail job = newJob(Rotina.class).withIdentity("CronQuartzJob", "OpenSource").build();
 
+            // Criação do Gatilho de Execução
             Trigger trigger = newTrigger()
-
             .withIdentity("RotinaOpenSource", "OpenSource")
-            .withSchedule(cronSchedule("0 0/1 1-23 * * ?")) 
+            .withSchedule(cronSchedule("0 0/1 0-23 * * ?")) 
             .build();
 
+            // Criação do Agendador de Execução
             scheduler = new StdSchedulerFactory().getScheduler();
             scheduler.start();
             scheduler.scheduleJob(job, trigger);
@@ -37,7 +40,6 @@ public class Listener implements ServletContextListener {
         } catch (SchedulerException ErroJOB) { ErroJOB.printStackTrace(); }
     }
         
-    /** @param servletContext **/
     @Override
     public void contextDestroyed(ServletContextEvent servletContext) {
 
